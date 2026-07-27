@@ -7,9 +7,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -25,7 +26,7 @@ public class MultiverseMod {
     public static final String MOD_ID = "multiverse";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-    // --- DIMENSIONES DEL MULTIVERSO ---
+    // Dimensiones del Multiverso
     public static final ResourceKey<Level> CONFEDERATE_DIM_KEY = ResourceKey.create(
             Registries.DIMENSION,
             new ResourceLocation(MOD_ID, "confederate_dimension")
@@ -41,27 +42,33 @@ public class MultiverseMod {
             new ResourceLocation(MOD_ID, "puffer_dimension")
     );
 
-    // --- REGISTRO DE ENTIDADES (NPCs / MOBS) ---
+    // Registro de Entidades (Aldeano Pez Globo con traje de negocios - NPC)
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID);
 
-    // Diseño conceptual: Aldeano pez globo con forma de jugador y ropa de negocios (Bussiness Puffer NPC)
-    public static final RegistryObject<EntityType<Monster>> BUSINESS_PUFFER_NPC = ENTITIES.register("business_puffer",
-            () -> EntityType.Builder.of(Monster::new, MobCategory.CREATURE)
-                    .sized(0.6F, 1.8F) // Tamaño estándar de la forma del jugador común
+    public static final RegistryObject<EntityType<WaterAnimal>> BUSINESS_PUFFER_NPC = ENTITIES.register("business_puffer",
+            () -> EntityType.Builder.of(WaterAnimal::new, MobCategory.CREATURE)
+                    .sized(0.6F, 1.8F) // Medidas exactas de la forma del jugador común
                     .build(new ResourceLocation(MOD_ID, "business_puffer").toString())
     );
 
     public MultiverseMod() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        
-        // Registrar entidades en el bus de mod
-        ENTITIES.register(modEventBus);
 
+        ENTITIES.register(modEventBus);
         modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::addEntityAttributes);
+
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        LOGGER.info("MultiverseMod inicializado con éxito: Dimensiones y NPCs de Negocios integrados.");
+        LOGGER.info("MultiverseMod inicializado correctamente con dimensiones y NPCs de negocios.");
+    }
+
+    private void addEntityAttributes(EntityAttributeCreationEvent event) {
+        event.put(BUSINESS_PUFFER_NPC.get(), AttributeSupplier.create()
+                .add(Attributes.MAX_HEALTH, 20.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.25D)
+                .build());
     }
 }
