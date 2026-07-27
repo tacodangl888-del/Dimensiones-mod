@@ -1,44 +1,85 @@
-package com.mod;
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+}
 
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+version = '1.0.0'
+group = 'com.mod'
 
-@Mod(MultiverseMod.MOD_ID)
-public class MultiverseMod {
-    public static final String MOD_ID = "multiverse";
-    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+base {
+    archivesName = 'multiverse'
+}
 
-    public static final ResourceKey<Level> CONFEDERATE_DIM_KEY = ResourceKey.create(
-            Registries.DIMENSION,
-            new ResourceLocation(MOD_ID, "confederate_dimension")
-    );
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-    public static final ResourceKey<Level> SOVIET_DIM_KEY = ResourceKey.create(
-            Registries.DIMENSION,
-            new ResourceLocation(MOD_ID, "soviet_dimension")
-    );
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
 
-    public static final ResourceKey<Level> PUFFER_DIM_KEY = ResourceKey.create(
-            Registries.DIMENSION,
-            new ResourceLocation(MOD_ID, "puffer_dimension")
-    );
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'DEBUG'
+            mods {
+                multiverse {
+                    source sourceSets.main
+                }
+            }
+        }
 
-    public MultiverseMod() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modEventBus.addListener(this::commonSetup);
-        MinecraftForge.EVENT_BUS.register(this);
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'DEBUG'
+            mods {
+                multiverse {
+                    source sourceSets.main
+                }
+            }
+        }
     }
+}
 
-    private void commonSetup(final FMLCommonSetupEvent event) {
-        LOGGER.info("MultiverseMod inicializado correctamente en Forge.");
+sourceSets.main.resources { srcDir 'src/main/generated' }
+
+repositories {
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.20.1-47.2.0'
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            'minecraft_version': '1.20.1', 'minecraft_version_range': '[1.20.1,1.21)',
+            'forge_version': '47.2.0', 'forge_version_range': '[47,)',
+            'loader_version': '[4,)',
+            'mod_id': 'multiverse', 'mod_name': 'Multiverse Mod', 'mod_license': 'All Rights Reserved', 'mod_version': '1.0.0',
+            'mod_authors': 'Yo', 'mod_description': 'Un mod de dimensiones para Minecraft Forge.'
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml']) {
+        expand replaceProperties
     }
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : "multiverse",
+                "Specification-Vendor"    : "Yo",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : project.version,
+                "Implementation-Vendor"   : "Yo",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
 }
