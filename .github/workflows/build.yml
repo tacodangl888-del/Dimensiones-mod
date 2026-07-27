@@ -47,7 +47,7 @@ sourceSets.main.resources { srcDir 'src/main/generated' }
 repositories {
     mavenCentral()
     maven { url = 'https://maven.minecraftforge.net/' }
-    maven { url = 'https://maven.parchmentmc.org' }
+    maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
 }
 
 dependencies {
@@ -85,4 +85,4 @@ jar {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-}  
+}
