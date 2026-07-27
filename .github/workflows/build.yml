@@ -1,33 +1,42 @@
-package tu.dominio.mod.world.dimension;
+package com.mod;
 
+import net.fabricmc.api.ModInitializer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import tu.dominio.mod.TuModId; // Reemplaza "TuModId" con el nombre real de tu clase principal o paquete
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class ModDimensions {
-    
-    // Clave para la Dimensión Confederada (El Sur Victorioso)
+public class MultiverseMod implements ModInitializer {
+    public static final String MOD_ID = "multiverse";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+    // Definición de las tres dimensiones del multiverso
     public static final ResourceKey<Level> CONFEDERATE_DIM_KEY = ResourceKey.create(
             Registries.DIMENSION,
-            new ResourceLocation(TuModId.MOD_ID, "confederate_dimension")
+            new ResourceLocation(MOD_ID, "confederate_dimension")
     );
 
-    // Clave para la Dimensión Soviética (La URSS Hiperfortalecida)
     public static final ResourceKey<Level> SOVIET_DIM_KEY = ResourceKey.create(
             Registries.DIMENSION,
-            new ResourceLocation(TuModId.MOD_ID, "soviet_dimension")
+            new ResourceLocation(MOD_ID, "soviet_dimension")
     );
 
-    // Clave para la Dimensión del Pez Globo (El mundo acuático orgánico)
     public static final ResourceKey<Level> PUFFER_DIM_KEY = ResourceKey.create(
             Registries.DIMENSION,
-            new ResourceLocation(TuModId.MOD_ID, "puffer_dimension")
+            new ResourceLocation(MOD_ID, "puffer_dimension")
     );
 
-    // Método de registro que se llama desde la inicialización principal de tu mod
-    public static void register() {
-        TuModId.LOGGER.info("Registrando las dimensiones del multiverso para " + TuModId.MOD_ID);
+    @Override
+    public void onInitialize() {
+        LOGGER.info("Iniciando Multiverso Mod y registrando dimensiones...");
+        registerDimensions();
+    }
+
+    private void registerDimensions() {
+        LOGGER.info("Dimensión Confederada registrada: " + CONFEDERATE_DIM_KEY.location());
+        LOGGER.info("Dimensión Soviética registrada: " + SOVIET_DIM_KEY.location());
+        LOGGER.info("Dimensión del Pez Globo registrada: " + PUFFER_DIM_KEY.location());
     }
 }
