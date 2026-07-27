@@ -1,27 +1,44 @@
-name: Build Minecraft Mod
+package com.mod;
 
-on:
-  push:
-    branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+@Mod(MultiverseMod.MOD_ID)
+public class MultiverseMod {
+    public static final String MOD_ID = "multiverse";
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+    public static final ResourceKey<Level> CONFEDERATE_DIM_KEY = ResourceKey.create(
+            Registries.DIMENSION,
+            new ResourceLocation(MOD_ID, "confederate_dimension")
+    );
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
+    public static final ResourceKey<Level> SOVIET_DIM_KEY = ResourceKey.create(
+            Registries.DIMENSION,
+            new ResourceLocation(MOD_ID, "soviet_dimension")
+    );
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+    public static final ResourceKey<Level> PUFFER_DIM_KEY = ResourceKey.create(
+            Registries.DIMENSION,
+            new ResourceLocation(MOD_ID, "puffer_dimension")
+    );
 
-    - name: Build with Gradle
-      run: ./gradlew build
+    public MultiverseMod() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modEventBus.addListener(this::commonSetup);
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    private void commonSetup(final FMLCommonSetupEvent event) {
+        LOGGER.info("MultiverseMod inicializado correctamente en Forge.");
+    }
+}
