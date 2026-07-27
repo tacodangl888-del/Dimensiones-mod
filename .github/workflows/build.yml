@@ -1,0 +1,33 @@
+package tu.dominio.mod.world.dimension;
+
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import tu.dominio.mod.TuModId; // Reemplaza "TuModId" con el nombre real de tu clase principal o paquete
+
+public class ModDimensions {
+    
+    // Clave para la Dimensión Confederada (El Sur Victorioso)
+    public static final ResourceKey<Level> CONFEDERATE_DIM_KEY = ResourceKey.create(
+            Registries.DIMENSION,
+            new ResourceLocation(TuModId.MOD_ID, "confederate_dimension")
+    );
+
+    // Clave para la Dimensión Soviética (La URSS Hiperfortalecida)
+    public static final ResourceKey<Level> SOVIET_DIM_KEY = ResourceKey.create(
+            Registries.DIMENSION,
+            new ResourceLocation(TuModId.MOD_ID, "soviet_dimension")
+    );
+
+    // Clave para la Dimensión del Pez Globo (El mundo acuático orgánico)
+    public static final ResourceKey<Level> PUFFER_DIM_KEY = ResourceKey.create(
+            Registries.DIMENSION,
+            new ResourceLocation(TuModId.MOD_ID, "puffer_dimension")
+    );
+
+    // Método de registro que se llama desde la inicialización principal de tu mod
+    public static void register() {
+        TuModId.LOGGER.info("Registrando las dimensiones del multiverso para " + TuModId.MOD_ID);
+    }
+}
