@@ -7,7 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.Pig;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -26,7 +26,6 @@ public class MultiverseMod {
     public static final String MOD_ID = "multiverse";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-    // Dimensiones del Multiverso
     public static final ResourceKey<Level> CONFEDERATE_DIM_KEY = ResourceKey.create(
             Registries.DIMENSION,
             new ResourceLocation(MOD_ID, "confederate_dimension")
@@ -42,12 +41,11 @@ public class MultiverseMod {
             new ResourceLocation(MOD_ID, "puffer_dimension")
     );
 
-    // Registro de Entidades (NPC Pez Globo con traje de negocios)
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID);
 
-    public static final RegistryObject<EntityType<Pig>> BUSINESS_PUFFER_NPC = ENTITIES.register("business_puffer",
-            () -> EntityType.Builder.of(Pig::new, MobCategory.CREATURE)
-                    .sized(0.6F, 1.8F) // Tamaño de la forma del jugador común
+    public static final RegistryObject<EntityType<IronGolem>> BUSINESS_PUFFER_NPC = ENTITIES.register("business_puffer",
+            () -> EntityType.Builder.of(IronGolem::new, MobCategory.CREATURE)
+                    .sized(0.6F, 1.8F)
                     .build(new ResourceLocation(MOD_ID, "business_puffer").toString())
     );
 
@@ -62,13 +60,10 @@ public class MultiverseMod {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        LOGGER.info("MultiverseMod inicializado correctamente con dimensiones y NPCs de negocios.");
+        LOGGER.info("MultiverseMod inicializado correctamente.");
     }
 
     private void addEntityAttributes(EntityAttributeCreationEvent event) {
-        event.put(BUSINESS_PUFFER_NPC.get(), AttributeSupplier.create()
-                .add(Attributes.MAX_HEALTH, 20.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.25D)
-                .build());
+        event.put(BUSINESS_PUFFER_NPC.get(), IronGolem.createAttributes().build());
     }
 }
